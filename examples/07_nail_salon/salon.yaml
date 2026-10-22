@@ -1,0 +1,144 @@
+# Phase 0: the salon, as structured data. Everything the receptionist tells a
+# customer about services, prices, hours and policies comes from this file.
+# (A demo salon; replace with the real one.)
+
+salon:
+  name: Luxe Nails Studio
+  timezone: America/New_York
+  phone: "+1 555 0100"
+  address: 12 Main Street, Springfield
+
+# Opening hours per weekday; a missing day is closed.
+business_hours:
+  monday: "09:00-19:00"
+  tuesday: "09:00-19:00"
+  wednesday: "09:00-19:00"
+  thursday: "09:00-20:00"
+  friday: "09:00-20:00"
+  saturday: "09:00-18:00"
+
+# Dates the whole salon is closed.
+closures:
+  - "2026-12-25"
+  - "2027-01-01"
+
+booking_rules:
+  slot_interval_minutes: 30     # appointments start on the hour or half hour
+  buffer_minutes: 10            # cleanup time a technician needs between clients
+  min_notice_minutes: 60        # no bookings starting within the next hour
+  max_days_ahead: 60            # bookings open two months ahead
+  cancellation_notice_hours: 24 # cancelling later than this counts as a late cancellation
+
+services:
+  - id: gel_manicure
+    name: Gel Manicure
+    description: Nail shaping, cuticle care and long-lasting gel polish.
+    price: 45
+    duration_minutes: 60
+    required_skills: [gel]
+  - id: classic_manicure
+    name: Classic Manicure
+    description: Nail shaping, cuticle care and regular polish.
+    price: 30
+    duration_minutes: 45
+    required_skills: [manicure]
+  - id: french_gel_manicure
+    name: French Gel Manicure
+    description: Gel manicure with a classic or micro French tip.
+    price: 55
+    duration_minutes: 75
+    required_skills: [gel]
+  - id: acrylic_full_set
+    name: Acrylic Full Set
+    description: Full set of acrylic extensions, shaped to your chosen length and shape.
+    price: 65
+    duration_minutes: 90
+    required_skills: [acrylic]
+  - id: gel_extensions
+    name: Gel Extensions
+    description: Lightweight gel extensions (soft gel tips or sculpted gel).
+    price: 75
+    duration_minutes: 105
+    required_skills: [gel, extensions]
+  - id: spa_pedicure
+    name: Spa Pedicure
+    description: Soak, exfoliation, massage, nail care and polish.
+    price: 50
+    duration_minutes: 60
+    required_skills: [pedicure]
+  - id: nail_art
+    name: Nail Art
+    description: Hand-painted designs, chrome, gems or foils on up to ten nails (add to any manicure).
+    price: 20
+    duration_minutes: 30
+    required_skills: [nail_art]
+  - id: removal
+    name: Gel or Acrylic Removal
+    description: Safe removal of gel polish or acrylics, with nail care.
+    price: 15
+    duration_minutes: 20
+    required_skills: [removal]
+
+# Who can do what: a technician can perform every service whose required skills
+# they all have. Working hours per weekday; a missing day is a day off.
+technicians:
+  - id: emily
+    name: Emily
+    skills: [gel, manicure, acrylic, nail_art, extensions, removal]
+    working_hours:
+      monday: "09:00-17:00"
+      tuesday: "09:00-17:00"
+      wednesday: "09:00-17:00"
+      friday: "11:00-20:00"
+      saturday: "09:00-18:00"
+  - id: sarah
+    name: Sarah
+    skills: [gel, manicure, pedicure, removal]
+    working_hours:
+      tuesday: "10:00-19:00"
+      wednesday: "10:00-19:00"
+      thursday: "10:00-20:00"
+      friday: "10:00-20:00"
+      saturday: "09:00-15:00"
+  - id: mia
+    name: Mia
+    skills: [acrylic, extensions, gel, nail_art, pedicure, removal]
+    working_hours:
+      monday: "12:00-19:00"
+      thursday: "09:00-20:00"
+      friday: "09:00-17:00"
+      saturday: "12:00-18:00"
+
+policies:
+  - id: cancellation
+    title: Cancellation policy
+    text: >-
+      Please cancel or reschedule at least 24 hours before your appointment.
+      Late cancellations may be charged 50% of the service price.
+  - id: late_arrival
+    title: Late arrival
+    text: >-
+      We hold your appointment for 15 minutes. After that we may need to shorten
+      the service or reschedule you.
+  - id: no_show
+    title: No-shows
+    text: >-
+      Missed appointments without notice may be charged the full service price,
+      and we may ask for a deposit on future bookings.
+  - id: booking
+    title: Booking rules
+    text: >-
+      Appointments can be booked from one hour to 60 days ahead. One service per
+      appointment; book add-ons such as nail art as a separate, back-to-back appointment.
+
+faqs:
+  - question: Do you accept walk-ins?
+    answer: Yes, when a technician is free, but booking ahead guarantees your time.
+  - question: How long does gel polish last?
+    answer: Usually two to three weeks with proper care.
+  - question: Do I need to remove my old gel before a new set?
+    answer: Yes. Book a Gel or Acrylic Removal before your new service, or ask us to add it.
+  - question: What payment methods do you accept?
+    answer: Cash and all major cards. Tips can be added on card.
+  - question: Is there parking?
+    answer: Free parking is available behind the building.

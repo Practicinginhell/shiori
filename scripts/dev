@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# scripts/dev — run an example app locally (graphflow is a library; the examples are
+# its runnable apps). All examples run offline.
+#
+#   ./scripts/dev                       # the nail salon demo (examples/07_nail_salon)
+#   ./scripts/dev 01_chatbot            # another example
+#   ./scripts/dev 07_nail_salon chat --model openai:gpt-4.1   # a live model (needs a key)
+#
+# For an interactive REPL use `graphflow dev` instead (it prompts, so it isn't a script).
+# Contract: runs in the foreground, logs to stdout/stderr.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+PYTHON="${PYTHON:-python}"
+
+example="${1:-07_nail_salon}"
+[ $# -gt 0 ] && shift
+if [ ! -f "examples/$example/app.py" ]; then
+  echo "scripts/dev: no examples/$example/app.py; choose one of:" >&2
+  ls examples >&2
+  exit 2
+fi
+if [ $# -eq 0 ] && [ "$example" = "07_nail_salon" -o "$example" = "06_test_time_communication" ]; then
+  set -- demo
+fi
+exec "$PYTHON" "examples/$example/app.py" "$@"

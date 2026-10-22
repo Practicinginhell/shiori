@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+*.db
+
+# AI agent files: kept local, never pushed (leading / = repo root only)
+/AGENTS.md
+/CLAUDE.md
+/CLAUDE.local.md
+/GEMINI.md
+/.claude/
+/.agents/
+/ai/
+/tasks/
+/.mcp.json
+/.github/copilot-instructions.md
+/.github/PULL_REQUEST_TEMPLATE.md
+
+# Legacy prototype and old linter config, kept local
+/src/
+/pylintrc
+
+# Node (examples/08_tanklight/ui)
+node_modules/
+
+# Secrets (model.yaml holds an API key)
+model.yaml
+.env
+.env.*
+!.env.example
+secrets/
+
+# OS junk
+.DS_Store
+Thumbs.db

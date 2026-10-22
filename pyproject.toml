@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "graphflow"
+version = "0.2.0"
+description = "Production-grade, high-level universal framework on top of LangGraph"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Graphflow AI Architecture Team" }]
+license = { text = "MIT" }
+dependencies = [
+    "langgraph>=1.0.0",
+    "langchain-core>=1.0.0",
+    "pydantic>=2.0.0",
+    "typing-extensions>=4.5.0",
+    "pyyaml>=6.0",
+    "click>=8.0.0",
+]
+
+[project.optional-dependencies]
+openai = ["langchain-openai>=0.2.0", "openai>=1.0.0"]
+sqlite = ["langgraph-checkpoint-sqlite>=2.0.0"]
+dev = ["pytest>=7.0.0", "pytest-asyncio>=0.23.0", "httpx>=0.24.0", "langgraph-checkpoint-sqlite>=2.0.0", "ruff>=0.6"]
+
+[project.scripts]
+graphflow = "graphflow.cli.main:cli"
+
+[tool.setuptools.packages.find]
+include = ["graphflow*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+extend-exclude = ["examples/*/data"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "BLE", "PIE", "PERF", "RUF", "PLW1510", "S"]
+ignore = [
+    "E501",    # long lines are left to judgment (line-length is a formatter target)
+    "RUF001", "RUF002", "RUF003",  # the paper's prompt and docs use typographic characters
+    "S101",    # assert is used for internal invariants
+    "S311",    # random is used for jitter/simulation, not cryptography
+    "PERF203", # try/except inside retry loops is the point of a retry loop
+    "RUF005",  # list concatenation is fine
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "BLE001", "B011", "B017", "PERF"]
+"examples/**" = ["S", "BLE001"]

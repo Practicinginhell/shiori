@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# scripts/build — build the graphflow sdist and wheel into dist/.
+#
+# Uses `uv build` when uv is installed, otherwise `pip wheel` (wheel only).
+#
+# Contract: exit 0 = artifact produced in dist/, non-zero = build failure.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+PYTHON="${PYTHON:-python}"
+
+if command -v uv >/dev/null 2>&1; then
+  uv build --out-dir dist
+else
+  "$PYTHON" -m pip wheel --no-deps --wheel-dir dist .
+fi
+ls dist

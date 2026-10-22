@@ -1,0 +1,39 @@
+# CI calls the same ./scripts/* wrappers agents use, so they can't disagree about how
+# to lint, test or build. (No uv here: setup and build use their pip fallbacks.)
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: ./scripts/setup
+      - run: ./scripts/lint
+      - run: ./scripts/build
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: ./scripts/setup
+      - run: ./scripts/test

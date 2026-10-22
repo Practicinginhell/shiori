@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TankLight</title>
+  <meta name="description" content="TankLight: a household water protection tracker for truck-served tanks. Simulated demo.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#device">Skip to the kitchen display</a>
+  <header class="top">
+    <div class="brand">
+      <span class="mark" data-icon="droplet"></span>
+      <h1>TankLight</h1>
+    </div>
+    <p class="sub">Household water protection tracker · <strong>simulated demo</strong></p>
+    <div class="top-actions">
+      <button type="button" id="tour-start" class="primary"><span data-icon="compass"></span>Take the tour</button>
+      <button type="button" id="kitchen-toggle" aria-pressed="false"><span data-icon="screen"></span><span class="label">Kitchen mode</span></button>
+    </div>
+    <p class="clock"><span id="clock">Loading…</span> · <span id="season-label"></span>
+      <span id="storm-badge" class="badge badge-storm" hidden>Blizzard: no trucks today</span></p>
+  </header>
+
+  <main class="grid">
+    <section id="device" class="card device" aria-labelledby="device-title">
+      <h2 id="device-title">Kitchen display <span class="muted" id="home-label"></span></h2>
+      <div class="panel" id="panel" data-state="service">
+        <div class="light" aria-hidden="true"><svg viewBox="0 0 64 64" id="light-icon"></svg></div>
+        <div class="readout">
+          <p class="state-word" id="state-word" role="status" aria-live="polite">…</p>
+          <p class="message" id="message"></p>
+          <p class="also" id="also" hidden></p>
+          <ul class="details" id="details"></ul>
+        </div>
+      </div>
+      <div class="sewage" id="sewage" data-state="protected">
+        <span class="sewage-dot" aria-hidden="true"></span>
+        <div>
+          <p class="sewage-title"><span id="sewage-label">Sewage tank (outside)</span>: <strong id="sewage-word">…</strong></p>
+          <p class="sewage-message" id="sewage-message"></p>
+          <p class="sewage-details muted" id="sewage-details"></p>
+        </div>
+      </div>
+      <div class="device-actions">
+        <fieldset class="langs" id="langs">
+          <legend>Language</legend>
+          <label><input type="radio" name="lang" value="en" checked> English</label>
+          <label><input type="radio" name="lang" value="fr"> Français</label>
+          <label><input type="radio" name="lang" value="iu"> <span lang="iu">ᐃᓄᒃᑎᑐᑦ</span></label>
+        </fieldset>
+        <button type="button" class="big primary" id="speak"><span data-icon="volume"></span>Hear the status</button>
+      </div>
+      <p class="note" id="lang-note" hidden></p>
+      <p class="note muted" id="engine-note"></p>
+    </section>
+
+    <section class="card controls" id="controls" aria-labelledby="controls-title">
+      <h2 id="controls-title">Demo controls</h2>
+      <div class="group" id="grp-time" role="group" aria-labelledby="g-time">
+        <h3 id="g-time">Time</h3>
+        <button type="button" id="play" aria-pressed="false"><span data-icon="play"></span><span class="label">Play</span></button>
+        <button type="button" data-action="advance" data-hours="1"><span data-icon="plus"></span>1 hour</button>
+        <button type="button" data-action="advance" data-hours="6"><span data-icon="plus"></span>6 hours</button>
+        <button type="button" data-action="advance" data-hours="24"><span data-icon="plus"></span>1 day</button>
+      </div>
+      <div class="group" id="grp-water" role="group" aria-labelledby="g-water">
+        <h3 id="g-water">Water (this home)</h3>
+        <button type="button" data-action="drain" data-pct="10"><span data-icon="drain"></span>Use most of the water (setup)</button>
+        <button type="button" data-action="deliver_now"><span data-icon="truck"></span>Deliver water now</button>
+        <button type="button" data-action="vitamin_c"><span data-icon="pill"></span>Add vitamin C (removes chlorine)</button>
+        <button type="button" data-action="make_murky"><span data-icon="waves"></span>Stir in clay (murky)</button>
+      </div>
+      <div class="group" id="grp-device" role="group" aria-labelledby="g-device">
+        <h3 id="g-device">Device</h3>
+        <button type="button" data-action="pull_probe"><span data-icon="unplug"></span>Pull the probe out</button>
+        <button type="button" data-action="attach_probe"><span data-icon="plug"></span>Put the probe back</button>
+      </div>
+      <div class="group" id="grp-sewage" role="group" aria-labelledby="g-sewage">
+        <h3 id="g-sewage">Sewage tank (outside)</h3>
+        <button type="button" data-action="pump_out_now"><span data-icon="truck"></span>Pump out now</button>
+        <button type="button" data-action="heater_off"><span data-icon="snowflake"></span>Tank heater fails</button>
+        <button type="button" data-action="heater_on"><span data-icon="plug"></span>Fix the heater</button>
+      </div>
+      <div class="group" id="grp-weather" role="group" aria-labelledby="g-weather">
+        <h3 id="g-weather">Weather and season</h3>
+        <button type="button" data-action="storm" data-days="3"><span data-icon="snowflake"></span>Blizzard: no trucks for 3 days</button>
+        <button type="button" data-action="reset" data-season="january"><span data-icon="restart"></span>Restart in January</button>
+        <button type="button" data-action="reset" data-season="july"><span data-icon="restart"></span>Restart in July</button>
+      </div>
+      <div class="group" id="grp-trucks" role="group" aria-labelledby="g-trucks">
+        <h3 id="g-trucks">Truck dispatch</h3>
+        <button type="button" data-action="set_policy" data-policy="fixed" aria-pressed="false"><span data-icon="loop"></span>Fixed loop</button>
+        <button type="button" data-action="set_policy" data-policy="priority" aria-pressed="false"><span data-icon="priority"></span>Priority (TankLight)</button>
+      </div>
+      <p class="error" id="error" role="alert" hidden></p>
+    </section>
+
+    <section class="card wide" id="chart-card" aria-labelledby="chart-title">
+      <h2 id="chart-title">This home, last 7 days</h2>
+      <div class="chart-wrap">
+        <svg id="chart" class="chart" viewBox="0 0 720 240" role="img" aria-labelledby="chart-svg-title chart-desc">
+          <title id="chart-svg-title">Chlorine, water level and light state over time</title>
+          <desc id="chart-desc">No data yet.</desc>
+        </svg>
+      </div>
+      <ul class="legend">
+        <li><span class="key key-fc"></span>Chlorine the device estimates</li>
+        <li><span class="key key-true"></span>True chlorine (only the simulator knows)</li>
+        <li><span class="key key-min"></span>0.2 mg/L minimum</li>
+        <li><span class="key key-level"></span>Tank level</li>
+      </ul>
+    </section>
+
+    <section class="card wide" id="fleet-card" aria-labelledby="fleet-title">
+      <h2 id="fleet-title">Today's truck plan <span class="muted" id="policy-label"></span></h2>
+      <p class="muted" id="fleet-stats"></p>
+      <div class="table-wrap">
+        <table>
+          <caption class="sr-only">Homes in delivery order, most urgent first</caption>
+          <thead><tr><th scope="col">#</th><th scope="col">Home</th><th scope="col">Light</th><th scope="col">Why</th>
+            <th scope="col">Tank</th><th scope="col">Water left</th><th scope="col">People</th></tr></thead>
+          <tbody id="fleet"></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="card wide" id="pump-card" aria-labelledby="pump-title">
+      <h2 id="pump-title">Today's sewage truck plan <span class="muted" id="pump-label"></span></h2>
+      <p class="muted" id="pump-stats"></p>
+      <div class="table-wrap">
+        <table>
+          <caption class="sr-only">Homes in pump-out order, most urgent first</caption>
+          <thead><tr><th scope="col">#</th><th scope="col">Home</th><th scope="col">Why</th>
+            <th scope="col">Sewage tank</th><th scope="col">Full in</th></tr></thead>
+          <tbody id="pump-outs"></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="card wide" id="inbox-card" aria-labelledby="inbox-title">
+      <h2 id="inbox-title">Messages from homes</h2>
+      <p class="muted">A family texts the water office. A small local model (Laya, offline) sorts each message: water
+        truck, sewage truck, bad water (urgent), device problem, or a person reads it when it isn't sure. It only sorts
+        the inbox; it never closes a message on its own.</p>
+      <form id="inbox-form" class="inbox-form">
+        <label for="inbox-text">Message from the home on the kitchen display</label>
+        <textarea id="inbox-text" rows="2" maxlength="500" required></textarea>
+        <div class="examples" role="group" aria-label="Example messages">
+          <button type="button" data-example="Our water tank is almost empty and we have a baby at home.">Tank almost empty</button>
+          <button type="button" data-example="The toilet is backing up, sewage is coming into the bathroom!">Toilet backing up</button>
+          <button type="button" data-example="My kids have diarrhea after drinking the tap water.">Kids sick from the water</button>
+          <button type="button" data-example="Le réservoir d'eaux usées est plein, pouvez-vous venir vider?">En français</button>
+          <button type="button" data-example="When is the next delivery day for our street?">A question</button>
+        </div>
+        <button type="submit" class="primary" id="inbox-send"><span data-icon="sparkle"></span>Send message</button>
+        <p class="muted" id="inbox-status" role="status" aria-live="polite"></p>
+      </form>
+      <ul class="inbox-list" id="inbox-list"></ul>
+    </section>
+
+    <section class="card wide" id="office-card" aria-labelledby="office-title">
+      <h2 id="office-title">Water office: next 7 days <span class="muted">· local AI, offline</span></h2>
+      <p class="muted">For the office laptop, not the kitchen. TimesFM forecasts how many homes will need urgent
+        water, and it's used only if it beat a simple guess on the last 4 weeks. A small local LLM rewords the plan,
+        and a check keeps its note only if every home and number survived.</p>
+      <button type="button" id="make-plan" class="primary"><span data-icon="sparkle"></span>Make the office plan</button>
+      <p class="muted" id="plan-status" role="status" aria-live="polite"></p>
+      <div id="plan-out" class="plan-out" hidden>
+        <div>
+          <h3>Forecast: homes needing urgent water · <span id="plan-model"></span></h3>
+          <div class="bars" id="plan-bars" role="img"></div>
+          <ul class="plan-scores muted" id="plan-scores"></ul>
+        </div>
+        <div>
+          <h3>Note for the office</h3>
+          <pre class="plan-note" id="plan-note"></pre>
+          <p class="muted plan-source" id="plan-source"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot" id="foot">
+    <p><strong>Simulated data.</strong> Chlorine, storms and water use are placeholder models, not measurements
+      from Inukjuak. TankLight tracks <em>chlorine protection</em>; it does not detect E. coli or metals.
+      Official boil-water advisories always come first.</p>
+  </footer>
+  <section id="tour" class="tour" role="dialog" aria-modal="false" aria-labelledby="tour-title" hidden>
+    <div class="tour-head">
+      <p class="tour-count" id="tour-count"></p>
+      <button type="button" id="tour-close" class="tour-close">Skip tour<span class="sr-only"> (Esc)</span></button>
+    </div>
+    <progress id="tour-progress" max="12" value="1" aria-hidden="true"></progress>
+    <h2 id="tour-title" tabindex="-1"></h2>
+    <p id="tour-body"></p>
+    <button type="button" id="tour-show" class="tour-show" hidden></button>
+    <div class="tour-nav">
+      <button type="button" id="tour-back">Back</button>
+      <button type="button" id="tour-next" class="primary">Next</button>
+    </div>
+  </section>
+  <script type="module" src="dist/main.js"></script>
+</body>
+</html>
